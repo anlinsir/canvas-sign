@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>canvas-sign</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #999;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        canvas {
+            background-color: #fff;
+        }
+
+        .action {
+            position: fixed;
+            bottom: 15%;
+            left: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas-sign"></canvas>
+    <div class="action">
+        <button id="reset">重置</button>
+        <button id="create">生成图片</button>
+
+    </div>
+</body>
+<!-- <script src="https://cdn.bootcss.com/vConsole/3.3.0/vconsole.min.js"></script>
+<script>
+    // init vConsole
+    var vConsole = new VConsole();
+    console.log('Hello world');
+</script> -->
+<script>
+    var point = { x: 0, y: 0 }
+    let moving = false
+    function onTouchStart(e) {
+        let x = e.touches[0].clientX,
+            y = e.touches[0].clientY; // 获取触摸点在画板（canvas）的坐标
+        point.x = x;
+        point.y = y;
+        ctx.beginPath();       // 开始绘制
+        ctx.lineWidth = 3; // 设置线条宽度
+        moving = true;
+
+    }
+    function onTouchMove(e) {
+        if (moving) {   // 确保mStart触发
+            let x = e.touches[0].clientX,
+                y = e.touches[0].clientY; // 获取触摸点在画板（canvas）的坐标
+            ctx.moveTo(point.x, point.y); // 把路径移动到画布中的指定点，不创建线条(起始点)
+            ctx.lineTo(x, y); // 添加一个新点，然后在画布中创建从该点到最后指定点的线条
+            ctx.stroke(); // 绘制自定义路线
+            point.x = x
+            point.y = y; // 重置点坐标为上一个坐标
+        }
+
+    }
+
+    function onTouchEnd(e) {
+        if (moving) {
+            ctx.closePath(); // 停止绘制
+            moving = false; // 关闭绘制开关
+        }
+    }
+
+
+    const canvasSign = document.getElementById('canvas-sign')
+    const reset = document.getElementById('reset')
+    const create = document.getElementById('create')
+
+    const visibleWidth = document.body.clientWidth
+    const visibleHeight = window.screen.height
+    canvasSign.width = visibleWidth
+    canvasSign.height = visibleHeight
+    canvasSign.addEventListener('touchstart', onTouchStart)
+    canvasSign.addEventListener('touchmove', onTouchMove)
+    canvasSign.addEventListener('touchend', onTouchEnd)
+    reset.addEventListener('click', resetCanvas)
+    function resetCanvas() {
+        ctx.clearRect(0, 0, visibleWidth, visibleHeight)
+    }
+
+    const ctx = canvasSign.getContext('2d')
+    ctx.fillStyle = '#000'
+    ctx.lineJoin = "round";
+    ctx.lineWidth = 1
+    // ctx.moveTo(0, 0);
+    // ctx.lineTo(200, 200);
+    // ctx.stroke()
+</script>
+
+</html>
