@@ -28,6 +28,7 @@
             position: fixed;
             bottom: 15%;
             left: 50%;
+            background-color: #000;
         }
     </style>
 </head>
@@ -37,15 +38,16 @@
     <div class="action">
         <button id="reset">重置</button>
         <button id="create">生成图片</button>
-
+        <br>
+        <img id="img" width="100" height="100" src="" alt="">
     </div>
 </body>
-<!-- <script src="https://cdn.bootcss.com/vConsole/3.3.0/vconsole.min.js"></script>
+<script src="https://cdn.bootcss.com/vConsole/3.3.0/vconsole.min.js"></script>
 <script>
     // init vConsole
     var vConsole = new VConsole();
     console.log('Hello world');
-</script> -->
+</script>
 <script>
     var point = { x: 0, y: 0 }
     let moving = false
@@ -83,6 +85,8 @@
     const canvasSign = document.getElementById('canvas-sign')
     const reset = document.getElementById('reset')
     const create = document.getElementById('create')
+    const imgEle = document.getElementById('img')
+
 
     const visibleWidth = document.body.clientWidth
     const visibleHeight = window.screen.height
@@ -96,8 +100,13 @@
         ctx.clearRect(0, 0, visibleWidth, visibleHeight)
     }
 
+    create.addEventListener('click', () => {
+        const img = canvasSign.toDataURL()
+        imgEle.src = img
+    })
+
     const ctx = canvasSign.getContext('2d')
-    ctx.fillStyle = '#000'
+    ctx.strokeStyle = '#FF0000'
     ctx.lineJoin = "round";
     ctx.lineWidth = 1
     // ctx.moveTo(0, 0);
