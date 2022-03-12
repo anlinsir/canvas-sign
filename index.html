@@ -26,9 +26,17 @@
 
         .action {
             position: fixed;
-            bottom: 15%;
-            left: 50%;
+            bottom: 5%;
+            right: 5%;
             background-color: #000;
+        }
+        #color-select {
+            position: fixed;
+            width: 10vw;
+            height: 10vw;
+            top: 0;
+            left: 0;
+            z-index: 2;
         }
     </style>
 </head>
@@ -37,10 +45,13 @@
     <canvas id="canvas-sign"></canvas>
     <div class="action">
         <button id="reset">重置</button>
+        <!-- <button id="last-step">上一步</button> -->
         <button id="create">生成图片</button>
         <br>
         <img id="img" width="100" height="100" src="" alt="">
     </div>
+    
+    <input type="color" id="color-select"  />
 </body>
 <script src="https://cdn.bootcss.com/vConsole/3.3.0/vconsole.min.js"></script>
 <script>
@@ -51,6 +62,7 @@
 <script>
     var point = { x: 0, y: 0 }
     let moving = false
+    const canvascanche = []
     function onTouchStart(e) {
         let x = e.touches[0].clientX,
             y = e.touches[0].clientY; // 获取触摸点在画板（canvas）的坐标
@@ -78,6 +90,7 @@
         if (moving) {
             ctx.closePath(); // 停止绘制
             moving = false; // 关闭绘制开关
+            canvascanche.push(ctx.getImageData(0, 0, visibleWidth, visibleHeight))
         }
     }
 
@@ -86,6 +99,19 @@
     const reset = document.getElementById('reset')
     const create = document.getElementById('create')
     const imgEle = document.getElementById('img')
+    const lastStep = document.getElementById('last-step')
+    const colorSelect = document.getElementById('color-select')
+    colorSelect.addEventListener('change',(e)=>{
+        ctx.strokeStyle =  e.target.value 
+    })
+
+    lastStep.addEventListener('click',()=>{
+        if(!canvascanche.length) {
+            ctx.clearRect(0, 0, visibleWidth, visibleHeight)
+            return
+        }
+        ctx.putImageData(canvascanche.pop(),0,0)
+    })
 
 
     const visibleWidth = document.body.clientWidth
@@ -106,7 +132,7 @@
     })
 
     const ctx = canvasSign.getContext('2d')
-    ctx.strokeStyle = '#FF0000'
+    ctx.strokeStyle = '#000'
     ctx.lineJoin = "round";
     ctx.lineWidth = 1
     // ctx.moveTo(0, 0);
